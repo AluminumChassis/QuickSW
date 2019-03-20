@@ -12,25 +12,25 @@ if(typeof(document) != "undefined") {
 } else {
   const cacheName = `QuickSW`;
   self.addEventListener('install', e => {
-    caches.delete(cacheName).then(function(){
-      e.waitUntil(
+    e.waitUntil(
         caches.open(cacheName).then(cache => {
           return cache.addAll([
-            `/offline.html`,
-            `/offlinestyle.css`,
-            `/offlinescript.js`
+            `/offline/index.html`,
+            `/offline/style.css`,
+            `/offline/script.js`,
           ]).then(() => self.skipWaiting());
         })
       );
-    });
   });
 
   self.addEventListener('fetch', event => {
+    
+    console.log(event.request.url)
     event.respondWith(
       caches.match(event.request).then(function(response) {
         return response || fetch(event.request);
       }).catch(function(err) {
-        return caches.match('/offline.html');
+        return caches.match('/offline/index.html');
       })
     );
   });
